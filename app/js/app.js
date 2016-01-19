@@ -1,73 +1,52 @@
-
-/* App Module */
+angular.element(document).ready(function() {
+    angular.bootstrap(document, ['app']);
+});
 
 var app = angular.module('app', ['ngMaterial']);
 
-/* App Config */
-
 app.config(['$mdThemingProvider', function ($mdThemingProvider) {
-    $mdThemingProvider.theme('altTheme').primaryPalette('purple');
+    
+    // Theme config
+    $mdThemingProvider.theme('default')
+    .primaryPalette('blue-grey')
+    .accentPalette('red');
 }]);
-
-/* App Run */
 
 app.run(['$rootScope', function ($rootScope) {
     
-    //
+    // Initial variables
+    $rootScope.appName = 'Simple Chat';
 
 }]);
 
-/* App Controllers */
-
-app.controller('AppCtrl', ['$scope', function($scope) {
-  var imagePath = 'http://ww1.prweb.com/prfiles/2014/04/10/11752526/gI_134971_best-image-web-hosting.png';
-
-  $scope.todos = [];
-  for (var i = 0; i < 15; i++) {
-    $scope.todos.push({
-      face: imagePath,
-      what: "Brunch this weekend?",
-      who: "Min Li Chan",
-      notes: "I'll be in your neighborhood doing errands."
-    });
-  }
-}]);
-
-/* Directives */
-
-app.directive('header', ['socket', 'Source', function (socket, Source) {
+app.directive('html', ['Socket', 'Source', function (Socket, Source) {
     
     return function (scope) {
         
+        // Send message
         scope.send = function() {
-            socket.emit('chat message', { username: scope.username, message: scope.message });
+            Socket.emit('chat message', { username: scope.username, message: scope.message });
             scope.message = '';
         };
 
-        socket.on('chat message', function(messageObject) {
+        // Receive message
+        Socket.on('chat message', function(messageObject) {
+            
+            // Add message to the list
             Source.set(messageObject);
         });
-    };
 
-}]);
-
-app.directive('footer', ['Source', function (Source) {
-    
-    return function (scope) {
-
+        // Get init messages from Source service
         scope.$watch(function() {
             return Source.get();
-        },
-        function(newVal, oldVal) {
+        }, function(newVal, oldVal) {
             scope.list = newVal;
         });
-
     };
 
 }]);
 
-/* App Services */
-
+// Get init messages from service
 app.factory('Source', ['$http', function ($http) {
 
     var list;
@@ -79,7 +58,12 @@ app.factory('Source', ['$http', function ($http) {
 
     $http(httpConfig)
         .success(function (data, status, headers, config) {
-            list = data;
+            if(data.length) {
+                list = data;
+            } else {
+                list = [{ username: 'Chat Bot', message: 'Hello World' }];
+            }
+            
         })
         .error(function (error, status, headers, config) {
             console.log(status + ': ' + error);
@@ -97,7 +81,8 @@ app.factory('Source', ['$http', function ($http) {
 
 }]);
 
-app.factory('socket', ['$rootScope', function ($rootScope) {
+// Socket angular decorator
+app.factory('Socket', ['$rootScope', function ($rootScope) {
 
     var socket = io.connect();
 

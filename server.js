@@ -10,7 +10,7 @@ server.listen(port, function() {
 });
 
 var mongo = require('mongodb');
-var host = "mongodb://localhost:27017/board";
+var host = "mongodb://localhost:27017/chat";
 var MongoClient = mongo.MongoClient;
 
 MongoClient.connect(host, function(error, db) {
