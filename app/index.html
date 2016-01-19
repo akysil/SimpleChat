@@ -14,14 +14,13 @@
 
 <body>
 
-    <header>Chat</header>
-    <main>
+    <header>
         <form>
             <input type="text" name="username" ng-model="username">
             <input type="text" name="message" ng-model="message">
             <input type="submit" ng-click="send()" ng-disabled="!username || !message">
         </form>
-    </main>
+    </header>
     <footer>
         <dl ng-repeat="item in list | orderBy:'$index':true track by $index">
             <dt><mark ng-bind="item.username"></mark></dt>

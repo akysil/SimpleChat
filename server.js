@@ -3,7 +3,7 @@ var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 
-var port = 5000;
+var port = 8888;
 
 server.listen(port, function() {
     console.log('server listen port ' + port);
@@ -22,6 +22,10 @@ MongoClient.connect(host, function(error, db) {
 
     app.get('/', function(req, res){
         res.sendFile('/index.html');
+    });
+
+    app.get('/temp.html', function(req, res){
+        res.sendFile('/temp.html');
     });
     
     app.get('/list.json', function(req, res) {

@@ -1,12 +1,12 @@
 
 /* App Module */
 
-var app = angular.module('app', []);
+var app = angular.module('app', ['ngMaterial']);
 
 /* App Config */
 
-app.config([function () {
-    
+app.config(['$mdThemingProvider', function ($mdThemingProvider) {
+    $mdThemingProvider.theme('altTheme').primaryPalette('purple');
 }]);
 
 /* App Run */
@@ -17,9 +17,25 @@ app.run(['$rootScope', function ($rootScope) {
 
 }]);
 
+/* App Controllers */
+
+app.controller('AppCtrl', ['$scope', function($scope) {
+  var imagePath = 'http://ww1.prweb.com/prfiles/2014/04/10/11752526/gI_134971_best-image-web-hosting.png';
+
+  $scope.todos = [];
+  for (var i = 0; i < 15; i++) {
+    $scope.todos.push({
+      face: imagePath,
+      what: "Brunch this weekend?",
+      who: "Min Li Chan",
+      notes: "I'll be in your neighborhood doing errands."
+    });
+  }
+}]);
+
 /* Directives */
 
-app.directive('main', ['socket', 'Source', function (socket, Source) {
+app.directive('header', ['socket', 'Source', function (socket, Source) {
     
     return function (scope) {
         
@@ -47,14 +63,6 @@ app.directive('footer', ['Source', function (Source) {
         });
 
     };
-
-}]);
-
-/* App Controllers */
-
-app.controller('mainCtrl', ['$scope', function ($scope) {
-
-    //
 
 }]);
 
